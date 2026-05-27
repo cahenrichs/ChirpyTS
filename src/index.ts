@@ -10,15 +10,6 @@ const handlerReadiness = (req: Request, res: Response) => {
     res.send("OK");
 };
 
-app.use("/app", middlewareMetricsInc)
-app.use("/app", express.static("./src/app"));
-app.get("/healthz", handlerReadiness);
-app.use("/metrics", numberofRequestResponse)
-app.use("/reset", resetFileserverHits)
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
-
 type Middleware = (req: Request, res: Response, next: NextFunction) => void; 
 
 export const middlewareLogResponses: Middleware = (req, res, next) => {
@@ -44,9 +35,19 @@ export function numberofRequestResponse(req: Request, res: Response) {
 
 export function resetFileserverHits(req: Request, res: Response, next: NextFunction) {
     config.fileserverHits = 0
+    res.send("OK");
     next();
 }
 
 app.use(middlewareLogResponses)
-app.use(numberofRequestResponse,)
-app.use(resetFileserverHits)
+app.use("/app", middlewareMetricsInc, express.static("./src/app"));
+app.get("/api/healthz", middlewareMetricsInc, handlerReadiness);
+app.get("/api/metrics", numberofRequestResponse)
+app.get("/api/reset", resetFileserverHits)
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+
+
+
