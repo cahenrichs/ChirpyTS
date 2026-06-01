@@ -1,6 +1,6 @@
 import { handlerReset } from "./api/reset.js";
 import { handlerReadiness } from "./api/readiness.js";
-import { middlewareMetricsInc, middlewareLogResponse, middlewareErrorCheck } from "./api/middleware.js";
+import { middlewareMetricsInc, middlewareLogResponse, errorMiddleware } from "./api/middleware.js";
 import { handlerMetrics } from "./api/metrics.js";
 import { handlerChirpsValidate } from "./api/chirps.js";
 import { Request, Response, NextFunction } from "express";
@@ -33,7 +33,7 @@ app.post("/admin/reset", (req, res, next) => {
     Promise.resolve(handlerReset(req, res)).catch(next)
 })
 
-app.use(middlewareErrorCheck)
+app.use(errorMiddleware)
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
