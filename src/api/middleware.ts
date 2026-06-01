@@ -17,6 +17,18 @@ export function middlewareLogResponse(
   next();
 }
 
+export function middlewareErrorCheck(
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  console.log(err)
+  res.status(500).json({
+    "error": "Something went wrong on our end"
+  })
+}
+
 export function middlewareMetricsInc(
   _: Request,
   __: Response,
