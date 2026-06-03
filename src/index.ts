@@ -26,6 +26,9 @@ app.post("/api/validate_chirp", async (req, res, next) => {
         next(err);
     }
 })
+
+app.post("/api/users", )
+
 app.get("/admin/metrics", (req, res, next) => {
     Promise.resolve(handlerMetrics(req, res)).catch(next)
 })
