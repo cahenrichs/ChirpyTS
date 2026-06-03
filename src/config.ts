@@ -4,6 +4,7 @@ process.loadEnvFile();
 
 type APIConfig = {
     fileserverHits: number,
+    platform: string
 }
 
 const migrationConfig: MigrationConfig = {
@@ -23,6 +24,7 @@ type MasterConfig = {
 export const config: MasterConfig = {
     api: {
         fileserverHits: 0,
+        platform: envOrThrow("PLATFORM")
     },
     db: {
         migrationConfig,

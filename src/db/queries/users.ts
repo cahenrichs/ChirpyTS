@@ -9,3 +9,8 @@ export async function createUser(user: NewUser) {
     .returning();
     return result;
 }
+
+export async function deleteUsersTBL() {
+    await db.delete(users);
+    
+}

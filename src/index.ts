@@ -4,6 +4,7 @@ import { middlewareMetricsInc, middlewareLogResponse, errorMiddleware } from "./
 import { handlerMetrics } from "./api/metrics.js";
 import { handlerChirpsValidate } from "./api/chirps.js";
 import { Request, Response, NextFunction } from "express";
+import { handlerUsers } from "./api/users.js";
 
 import express  from "express";
 
@@ -27,7 +28,9 @@ app.post("/api/validate_chirp", async (req, res, next) => {
     }
 })
 
-app.post("/api/users", )
+app.post("/api/users", (req, res, next) => {
+    Promise.resolve(handlerUsers(req, res)).catch(next)
+} )
 
 app.get("/admin/metrics", (req, res, next) => {
     Promise.resolve(handlerMetrics(req, res)).catch(next)
