@@ -2,7 +2,7 @@ import { handlerReset } from "./api/reset.js";
 import { handlerReadiness } from "./api/readiness.js";
 import { middlewareMetricsInc, middlewareLogResponse, errorMiddleware } from "./api/middleware.js";
 import { handlerMetrics } from "./api/metrics.js";
-import { handlerChirpsValidate } from "./api/chirps.js";
+import { handlerChirps } from "./api/chirps.js";
 import { Request, Response, NextFunction } from "express";
 import { handlerUsers } from "./api/users.js";
 
@@ -20,17 +20,14 @@ app.use("/app", middlewareMetricsInc, express.static("./src/app"));
 app.get("/api/healthz", (req, res, next) => {
     Promise.resolve(handlerReadiness(req, res)).catch(next)
 });
-app.post("/api/validate_chirp", async (req, res, next) => {
-    try {
-        await handlerChirpsValidate(req, res);
-    } catch (err) {
-        next(err);
-    }
-})
 
 app.post("/api/users", (req, res, next) => {
     Promise.resolve(handlerUsers(req, res)).catch(next)
 } )
+
+app.post("/api/chirps", (req, res, next) => {
+    Promise.resolve(handlerChirps(req, res)).catch(next)
+})
 
 app.get("/admin/metrics", (req, res, next) => {
     Promise.resolve(handlerMetrics(req, res)).catch(next)
