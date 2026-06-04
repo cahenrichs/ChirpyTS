@@ -21,6 +21,10 @@ app.get("/api/healthz", (req, res, next) => {
     Promise.resolve(handlerReadiness(req, res)).catch(next)
 });
 
+app.get("/api/chirps", (req, res, next) => {
+    Promise.resolve(handlerChirps(req, res)).catch(next)
+} )
+
 app.post("/api/users", (req, res, next) => {
     Promise.resolve(handlerUsers(req, res)).catch(next)
 } )

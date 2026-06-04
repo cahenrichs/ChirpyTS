@@ -51,3 +51,5 @@ export async function handlerChirps(req: Request, res: Response) {
     userId: chirp.userId
   });
 }
+
+
