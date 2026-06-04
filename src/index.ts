@@ -2,7 +2,7 @@ import { handlerReset } from "./api/reset.js";
 import { handlerReadiness } from "./api/readiness.js";
 import { middlewareMetricsInc, middlewareLogResponse, errorMiddleware } from "./api/middleware.js";
 import { handlerMetrics } from "./api/metrics.js";
-import { handlerChirps, handlerGetChirps } from "./api/chirps.js";
+import { handlerChirps, handlerGetChirps, handlerGetChirpsById } from "./api/chirps.js";
 import { Request, Response, NextFunction } from "express";
 import { handlerUsers } from "./api/users.js";
 
@@ -20,6 +20,10 @@ app.use("/app", middlewareMetricsInc, express.static("./src/app"));
 app.get("/api/healthz", (req, res, next) => {
     Promise.resolve(handlerReadiness(req, res)).catch(next)
 });
+
+app.get("/api/chirps/:chirpId", (req, res, next) => {
+    Promise.resolve(handlerGetChirpsById(req, res)).catch(next)
+} )
 
 app.get("/api/chirps", (req, res, next) => {
     Promise.resolve(handlerGetChirps(req, res)).catch(next)
