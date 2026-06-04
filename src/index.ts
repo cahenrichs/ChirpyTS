@@ -2,7 +2,7 @@ import { handlerReset } from "./api/reset.js";
 import { handlerReadiness } from "./api/readiness.js";
 import { middlewareMetricsInc, middlewareLogResponse, errorMiddleware } from "./api/middleware.js";
 import { handlerMetrics } from "./api/metrics.js";
-import { handlerChirps } from "./api/chirps.js";
+import { handlerChirps, handlerGetChirps } from "./api/chirps.js";
 import { Request, Response, NextFunction } from "express";
 import { handlerUsers } from "./api/users.js";
 
@@ -22,7 +22,7 @@ app.get("/api/healthz", (req, res, next) => {
 });
 
 app.get("/api/chirps", (req, res, next) => {
-    Promise.resolve(handlerChirps(req, res)).catch(next)
+    Promise.resolve(handlerGetChirps(req, res)).catch(next)
 } )
 
 app.post("/api/users", (req, res, next) => {
