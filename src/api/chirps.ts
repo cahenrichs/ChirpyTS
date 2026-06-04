@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import { respondWithError, respondWithJSON } from "./json.js";
 import { BadRequestError, NotFoundError } from "./errors.js";
+import { createChirp } from "../db/queries/chirps.js";
 
 function validateChirps(body: string) {
   const badWords: string[] = ["kerfuffle","sharbert","fornax"]
@@ -25,13 +26,28 @@ function validateChirps(body: string) {
 export async function handlerChirps(req: Request, res: Response) {
    type parameters = {
     body: string;
+    userId: string;
   };
 
   const parms: parameters = req.body;
 
   const cleanedBody = validateChirps(parms.body)
+
+  const chirp = await createChirp({
+    body: cleanedBody,
+    userId: parms.userId,
+  });
+
+  if (!chirp) {
+    respondWithError(res, 500, "Failed to create chirp");
+    return;
+  }
   
   respondWithJSON(res, 201, {
+    id: chirp.id,
+    createdAt: chirp.createdAt,
+    updatedAt: chirp.updatedAt,
     body: cleanedBody,
+    userId: chirp.userId
   });
 }
