@@ -5,6 +5,7 @@ import { respondWithJSON } from "./json.js";
 
 export async function handlerUsers(req: Request, res: Response) {
     type parameters = {
+        password: string;
         email: string;
     };
 
