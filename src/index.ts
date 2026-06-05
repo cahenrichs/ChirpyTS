@@ -5,6 +5,7 @@ import { handlerMetrics } from "./api/metrics.js";
 import { handlerChirps, handlerGetChirps, handlerGetChirpsById } from "./api/chirps.js";
 import { Request, Response, NextFunction } from "express";
 import { handlerUsers } from "./api/users.js";
+import { handlerLogin } from "./api/login.js";
 
 import express  from "express";
 
@@ -35,6 +36,10 @@ app.post("/api/users", (req, res, next) => {
 
 app.post("/api/chirps", (req, res, next) => {
     Promise.resolve(handlerChirps(req, res)).catch(next)
+})
+
+app.post("/api/login", (req, res, next) => {
+    Promise.resolve(handlerLogin(req, res)).catch(next)
 })
 
 app.get("/admin/metrics", (req, res, next) => {

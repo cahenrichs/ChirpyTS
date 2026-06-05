@@ -1,7 +1,7 @@
 import argon2 from "argon2";
 
+
 export async function hashPassword(password: string): Promise<string> {
-    const argon2 = require("argon2");
     try {
         const hash = await argon2.hash(password);
         return hash;

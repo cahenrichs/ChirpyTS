@@ -2,6 +2,8 @@ import { Response, Request } from "express";
 import { createUser } from "../db/queries/users.js";
 import { BadRequestError } from "./errors.js";
 import { respondWithJSON } from "./json.js";
+import { hashPassword } from "../auth.js";
+
 
 export async function handlerUsers(req: Request, res: Response) {
     type parameters = {
@@ -15,8 +17,15 @@ export async function handlerUsers(req: Request, res: Response) {
         throw new BadRequestError("Email is required");
      }
 
-    const user = await createUser({
+    if (!params.password) {
+        throw new BadRequestError("Password is required");
+     }
+
+     const hashedPassword = await hashPassword(params.password);
+
+     const user = await createUser({
         email: params.email,
+        hashedPassword: hashedPassword,
     });
 
     respondWithJSON(res, 201, {

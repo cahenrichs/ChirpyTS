@@ -43,6 +43,7 @@ export function errorMiddleware(
   } else if (err instanceof Forbidden) {
     respondWithError(res, 403, err.message);
   } else {
+    console.error(err);
     res.status(500).send("Internal Server Error")
   }
 }
