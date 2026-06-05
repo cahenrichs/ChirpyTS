@@ -1,4 +1,6 @@
 import argon2 from "argon2";
+import jwt from "jsonwebtoken";
+import type { JwtPayload } from "jsonwebtoken";
 
 
 export async function hashPassword(password: string): Promise<string> {
@@ -18,4 +20,34 @@ export async function checkPasswordHash(password: string, hash: string): Promise
         console.error("Error checking password hash:", err);
         throw new Error("Failed to check password hash");
     }
+}
+
+export function makeJWT(userID: string, expiresIn: number, secret: string): string {
+    type payload = Pick<JwtPayload, "iss" | "sub" | "iat" | "exp">;
+
+    let iat = Math.floor(Date.now() / 1000);
+
+    const jwtPayload: payload = {
+        iss: "chirpy",
+        sub: userID,
+        iat: iat,
+        exp: iat + expiresIn,
+    };
+
+    return jwt.sign(jwtPayload, secret);
+}
+
+export function validateJWT(tokenString: string, secret: string): string {
+    let decoded: JwtPayload;
+    try {
+        decoded = jwt.verify(tokenString, secret) as JwtPayload;
+    } catch (err) {
+        console.error("Error verifying JWT:", err);
+        throw new Error("Failed to verify JWT");
+    }
+        const userId = decoded.sub;
+        if (typeof userId !== "string") {
+            throw new Error("Invalid JWT payload: 'sub' claim is missing or not a string");
+        }
+        return userId;
 }
