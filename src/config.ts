@@ -4,7 +4,9 @@ process.loadEnvFile();
 
 type APIConfig = {
     fileserverHits: number,
-    platform: string
+    port: number,
+    platform: string,
+    jwtSecret: string
 }
 
 const migrationConfig: MigrationConfig = {
@@ -24,7 +26,9 @@ type MasterConfig = {
 export const config: MasterConfig = {
     api: {
         fileserverHits: 0,
-        platform: envOrThrow("PLATFORM")
+        port: Number(envOrThrow("PORT")),
+        platform: envOrThrow("PLATFORM"),
+        jwtSecret: envOrThrow("JWT_SECRET")
     },
     db: {
         migrationConfig,

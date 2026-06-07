@@ -1,6 +1,8 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
+import { Request } from "express";
+import { BadRequestError } from "./api/errors.js";
 
 
 export async function hashPassword(password: string): Promise<string> {
@@ -50,4 +52,18 @@ export function validateJWT(tokenString: string, secret: string): string {
             throw new Error("Invalid JWT payload: 'sub' claim is missing or not a string");
         }
         return userId;
+}
+
+export function getBearerToken(req: Request): string {
+    const authHeader = req.get("Authorization");
+    if (!authHeader) {
+        throw new BadRequestError("Authorization header is missing");
+    }
+    const parts = authHeader.split(" ");
+
+    if (!parts || parts.length !== 2 || parts[0] !== "Bearer") {
+        throw new BadRequestError("Invalid Authorization header format. Expected 'Bearer <token>'");
+    }
+
+    return parts[1];
 }
