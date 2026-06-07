@@ -2,6 +2,8 @@ import { Response, Request } from "express";
 import { respondWithError, respondWithJSON } from "./json.js";
 import { BadRequestError, NotFoundError } from "./errors.js";
 import { createChirp, getAllChirps, getChirpById } from "../db/queries/chirps.js";
+import { getBearerToken, validateJWT } from "../auth.js";
+import { config } from "../config.js";
 
 function validateChirps(body: string) {
   const badWords: string[] = ["kerfuffle","sharbert","fornax"]
@@ -26,30 +28,24 @@ function validateChirps(body: string) {
 export async function handlerChirps(req: Request, res: Response) {
    type parameters = {
     body: string;
-    userId: string;
   };
 
   const parms: parameters = req.body;
+
+  const bearerToken = getBearerToken(req);
+
+  const validToken = validateJWT(bearerToken, config.api.jwtSecret!);
 
   const cleanedBody = validateChirps(parms.body)
 
   const chirp = await createChirp({
     body: cleanedBody,
-    userId: parms.userId,
+    userId: validToken
   });
-
   if (!chirp) {
-    respondWithError(res, 500, "Failed to create chirp");
-    return;
-  }
-  
-  respondWithJSON(res, 201, {
-    id: chirp.id,
-    createdAt: chirp.createdAt,
-    updatedAt: chirp.updatedAt,
-    body: cleanedBody,
-    userId: chirp.userId
-  });
+   throw new Error("Failed to create chirp");
+  };
+  respondWithJSON(res, 201, chirp);
 }
 
 export async function handlerGetChirps(req: Request, res: Response) {
