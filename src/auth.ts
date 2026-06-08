@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import { Request } from "express";
 import { BadRequestError } from "./api/errors.js";
+import crypto from "crypto";
 
 
 export async function hashPassword(password: string): Promise<string> {
@@ -66,4 +67,9 @@ export function getBearerToken(req: Request): string {
     }
 
     return parts[1];
+}
+
+export function makeRefreshToken(): string {
+    const random = crypto.randomBytes(32).toString("hex");
+    return random;
 }

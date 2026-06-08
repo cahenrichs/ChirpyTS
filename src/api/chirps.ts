@@ -34,7 +34,7 @@ export async function handlerChirps(req: Request, res: Response) {
 
   const bearerToken = getBearerToken(req);
 
-  const validToken = validateJWT(bearerToken, config.api.jwtSecret!);
+  const validToken = validateJWT(bearerToken, config.jwt.secret);
 
   const cleanedBody = validateChirps(parms.body)
 

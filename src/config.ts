@@ -6,7 +6,6 @@ type APIConfig = {
     fileserverHits: number,
     port: number,
     platform: string,
-    jwtSecret: string
 }
 
 const migrationConfig: MigrationConfig = {
@@ -18,9 +17,16 @@ type DbConfig = {
   dbURL: string
 }
 
+type JWTConfig = {
+    defaultDuration: number,
+    secret: string,
+    issuer: string
+}
+
 type MasterConfig = {
     api: APIConfig,
-    db: DbConfig
+    db: DbConfig,
+    jwt: JWTConfig
 }
 
 export const config: MasterConfig = {
@@ -28,11 +34,15 @@ export const config: MasterConfig = {
         fileserverHits: 0,
         port: Number(envOrThrow("PORT")),
         platform: envOrThrow("PLATFORM"),
-        jwtSecret: envOrThrow("JWT_SECRET")
     },
     db: {
         migrationConfig,
         dbURL: envOrThrow("DB_URL")
+    },
+    jwt: {
+        defaultDuration: 60 * 60, // 1 hour in seconds
+        secret: envOrThrow("JWT_SECRET"),
+        issuer: "chirpy",
     }
 };
 
