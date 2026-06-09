@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { respondWithError, respondWithJSON } from "./json.js";
-import { BadRequestError, NotFoundError } from "./errors.js";
+import { BadRequestError, NotFoundError, Unauthorized } from "./errors.js";
 import { createChirp, getAllChirps, getChirpById } from "../db/queries/chirps.js";
 import { getBearerToken, validateJWT } from "../auth.js";
 import { config } from "../config.js";
@@ -34,8 +34,12 @@ export async function handlerChirps(req: Request, res: Response) {
 
   const bearerToken = getBearerToken(req);
 
-  const validToken = validateJWT(bearerToken, config.jwt.secret);
-
+  let validToken: string;
+  try{
+  validToken = validateJWT(bearerToken, config.jwt.secret);
+} catch {
+  throw new Unauthorized("not a valid token")
+}
   const cleanedBody = validateChirps(parms.body)
 
   const chirp = await createChirp({

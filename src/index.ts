@@ -8,7 +8,8 @@ import { handlerUsers } from "./api/users.js";
 import { handlerLogin } from "./api/login.js";
 
 import express  from "express";
-import { handlerRefresh } from "./api/refresh.js";
+import { handlerRefresh } from "./api/auth.js";
+import { handlerRevoke } from "./api/revoke.js";
 
 const app = express()
 const PORT = 8080
@@ -50,8 +51,12 @@ app.post("/admin/reset", (req, res, next) => {
     Promise.resolve(handlerReset(req, res)).catch(next)
 })
 
-app.post("api/refresh", (req, res, next) => {
+app.post("/api/refresh", (req, res, next) => {
     Promise.resolve(handlerRefresh(req, res)).catch(next)
+})
+
+app.post("/api/revoke", (req,res, next) => {
+    Promise.resolve(handlerRevoke(req, res)).catch(next)
 })
 
 app.use(errorMiddleware)

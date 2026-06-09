@@ -29,3 +29,15 @@ export async function getUserFromRefreshToken(token: string) {
 
     return result;
 }
+
+export async function revokeRefreshToken(token: string) {
+    const result = await db
+        .update(refreshTokens)
+        .set({
+            updatedAt: new Date(),
+            revokedAt: new Date(),
+        })
+        .where(eq(refreshTokens.token, token))
+
+        return result
+}
