@@ -4,7 +4,7 @@ import { middlewareMetricsInc, middlewareLogResponse, errorMiddleware } from "./
 import { handlerMetrics } from "./api/metrics.js";
 import { handlerChirps, handlerGetChirps, handlerGetChirpsById } from "./api/chirps.js";
 import { Request, Response, NextFunction } from "express";
-import { handlerUsers } from "./api/users.js";
+import { handlerUpdateUser, handlerUsers } from "./api/users.js";
 import { handlerLogin } from "./api/login.js";
 
 import express  from "express";
@@ -57,6 +57,10 @@ app.post("/api/refresh", (req, res, next) => {
 
 app.post("/api/revoke", (req,res, next) => {
     Promise.resolve(handlerRevoke(req, res)).catch(next)
+})
+
+app.put("/api/users", (req, res, next) => {
+    Promise.resolve(handlerUpdateUser(req, res)).catch(next)
 })
 
 app.use(errorMiddleware)
