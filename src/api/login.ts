@@ -4,6 +4,7 @@ import { respondWithError, respondWithJSON } from "./json.js";
 import { checkPasswordHash } from "../auth.js";
 import { makeJWT, makeRefreshToken } from "../auth.js";
 import { config } from "../config.js";
+import { saveRefreshToken } from "../db/queries/refresh.js";
 
 export async function handlerLogin(req: Request, res: Response) {
     type parameters = {
@@ -30,6 +31,12 @@ export async function handlerLogin(req: Request, res: Response) {
         const token = makeJWT(user.id, config.jwt.defaultDuration, config.jwt.secret);
 
         const refreshToken = makeRefreshToken();
+
+        const saveResult = await saveRefreshToken(refreshToken, user.id);
+        if (!saveResult) {
+            respondWithError(res, 500, "Failed to save refresh token");
+            return;
+        }
 
         respondWithJSON(res, 200 , {
             id: user.id,
