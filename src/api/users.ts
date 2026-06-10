@@ -35,6 +35,7 @@ export async function handlerUsers(req: Request, res: Response) {
         email: params.email,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+        isChirpyRed: user.isChirpyRed
     });
 }
 
@@ -67,6 +68,7 @@ export async function handlerUpdateUser(req: Request, res: Response) {
         email: params.email,
         createdAt: updateUser.createdAt,
         updatedAt: updateUser.updatedAt,
+        isChirpyRed: updateUser.isChirpyRed,
     })
 
      } catch {

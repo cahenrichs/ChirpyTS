@@ -44,7 +44,8 @@ export async function handlerLogin(req: Request, res: Response) {
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
             token: token,
-            refreshToken: refreshToken
+            refreshToken: refreshToken,
+            isChirpyRed: user.isChirpyRed
         })
     } catch (error) {
         respondWithError(res, 401, "internal server error");

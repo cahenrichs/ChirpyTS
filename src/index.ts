@@ -10,6 +10,7 @@ import { handlerLogin } from "./api/login.js";
 import express  from "express";
 import { handlerRefresh } from "./api/auth.js";
 import { handlerRevoke } from "./api/revoke.js";
+import { handlerWebhooks } from "./api/webhooks.js";
 
 const app = express()
 const PORT = 8080
@@ -65,6 +66,10 @@ app.put("/api/users", (req, res, next) => {
 
 app.delete("/api/chirps/:chirpId", (req, res, next) => {
     Promise.resolve(handlerDeleteChirp(req, res)).catch(next)
+})
+
+app.post("/api/polka/webhooks", (req, res, next) => {
+    Promise.resolve(handlerWebhooks(req, res)).catch(next)
 })
 
 app.use(errorMiddleware)
