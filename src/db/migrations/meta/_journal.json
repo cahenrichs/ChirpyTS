@@ -43,6 +43,13 @@
       "when": 1781120177754,
       "tag": "0005_young_sandman",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1781124431862,
+      "tag": "0006_silky_rocket_raccoon",
+      "breakpoints": true
     }
   ]
 }
