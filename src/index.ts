@@ -2,7 +2,7 @@ import { handlerReset } from "./api/reset.js";
 import { handlerReadiness } from "./api/readiness.js";
 import { middlewareMetricsInc, middlewareLogResponse, errorMiddleware } from "./api/middleware.js";
 import { handlerMetrics } from "./api/metrics.js";
-import { handlerChirps, handlerGetChirps, handlerGetChirpsById } from "./api/chirps.js";
+import { handlerChirps, handlerDeleteChirp, handlerGetChirps, handlerGetChirpsById } from "./api/chirps.js";
 import { Request, Response, NextFunction } from "express";
 import { handlerUpdateUser, handlerUsers } from "./api/users.js";
 import { handlerLogin } from "./api/login.js";
@@ -61,6 +61,10 @@ app.post("/api/revoke", (req,res, next) => {
 
 app.put("/api/users", (req, res, next) => {
     Promise.resolve(handlerUpdateUser(req, res)).catch(next)
+})
+
+app.delete("/api/chirps/:chirpId", (req, res, next) => {
+    Promise.resolve(handlerDeleteChirp(req, res)).catch(next)
 })
 
 app.use(errorMiddleware)

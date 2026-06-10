@@ -1,9 +1,11 @@
 import { Response, Request } from "express";
 import { respondWithError, respondWithJSON } from "./json.js";
-import { BadRequestError, NotFoundError, Unauthorized } from "./errors.js";
-import { createChirp, getAllChirps, getChirpById } from "../db/queries/chirps.js";
+import { BadRequestError, NotFoundError, Unauthorized, Forbidden } from "./errors.js";
+import { createChirp, getAllChirps, getChirpById, deleteChirp } from "../db/queries/chirps.js";
 import { getBearerToken, validateJWT } from "../auth.js";
 import { config } from "../config.js";
+import { chirps } from "../db/schema.js";
+import { stringify } from "querystring";
 
 function validateChirps(body: string) {
   const badWords: string[] = ["kerfuffle","sharbert","fornax"]
@@ -69,4 +71,32 @@ export async function handlerGetChirpsById(req: Request, res: Response) {
     return;
   }
   respondWithJSON(res, 200, chirp);
+}
+
+export async function handlerDeleteChirp(req: Request, res: Response) {
+  let bearerToken: string
+  try{
+   bearerToken = getBearerToken(req);
+  } catch (err) {
+    throw new Unauthorized("Bad token")
+
+  }
+  const validToken = validateJWT(bearerToken, config.jwt.secret)
+
+  const chirpId = req.params.chirpId;
+  if (typeof chirpId !== "string") {
+    throw new Unauthorized("Invalid chirp id")
+  }
+
+  const userId = await getChirpById(chirpId)
+  if (!chirpId) {
+   throw new Unauthorized("Chirp doesn't exist")
+  }
+
+  if (userId.userId !== validToken) {
+    throw new Forbidden("Not your chirp")
+  }
+
+  deleteChirp(chirpId)
+  res.status(204).send()
 }
