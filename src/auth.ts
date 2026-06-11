@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import { Request } from "express";
-import { BadRequestError } from "./api/errors.js";
+import { BadRequestError, Unauthorized } from "./api/errors.js";
 import crypto from "crypto";
 
 
@@ -72,4 +72,19 @@ export function getBearerToken(req: Request): string {
 export function makeRefreshToken(): string {
     const random = crypto.randomBytes(32).toString("hex");
     return random;
+}
+
+export function getAPIKey(req: Request) {
+    const authHeader = req.get("Authorization");
+    if (!authHeader) {
+        throw new Unauthorized("Authorization header is missing");
+    }
+
+    const parts = authHeader.trim().split(/\s+/);
+    
+    if (parts.length !== 2 || parts[0] !== "ApiKey") {
+        throw new BadRequestError("Invalid auth header format")
+    }
+
+    return parts[1];
 }

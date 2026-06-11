@@ -1,6 +1,8 @@
 import { Request, Response } from "express"
 import { upgradeToRed } from "../db/queries/users.js"
-import {  NotFoundError } from "./errors.js"
+import {  NotFoundError, Unauthorized } from "./errors.js"
+import { config } from "../config.js"
+import { getAPIKey } from "../auth.js"
 
 export async function handlerWebhooks(req: Request, res: Response) {
     type parameters = {
@@ -8,6 +10,12 @@ export async function handlerWebhooks(req: Request, res: Response) {
         data: {
             userId: string
         }
+    }
+
+    const authHeader = getAPIKey(req)
+
+    if (authHeader !== config.api.polkaKey) {
+        throw new Unauthorized("Not your chrip. You can not delete.")
     }
 
     const params: parameters = req.body
